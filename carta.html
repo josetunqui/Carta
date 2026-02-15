@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #a8b2d1;    /* Gris azulado claro */
+            --secondary: #64ffda;  /* Cian sutil para detalles */
+            --bg-dark: #0a192f;    /* Azul marino muy oscuro */
+            --glass: rgba(16, 33, 62, 0.7);
+            --text-color: #ccd6f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #020c1b, #0a192f, #112240);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        .lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 178, 209, 0.1);
+            border-radius: 5px; /* Bordes menos redondeados */
+            padding: 50px 40px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
+            text-align: left; 
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(168, 178, 209, 0.2);
+            padding-bottom: 20px;
+            display: inline-block;
+        }
+
+        #letter-content {
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .paragraph {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateX(-10px);
+            display: none;
+            transition: all 0.5s ease;
+            color: #8892b0;
+        }
+
+        .paragraph.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* Texto destacado dentro de párrafos */
+        .highlight {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .btn-next {
+            background: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+            padding: 10px 25px;
+            font-size: 0.9rem;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-next:hover {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        /* Barra de progreso */
+        .progress-bar {
+            width: 0%;
+            height: 2px;
+            background: var(--secondary);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="lines"></div>
+
+    <div class="container">
+        <div class="progress-bar" id="progress"></div>
+        <h1>Hola.</h1>
+            
+        <div id="letter-content">
+            <p class="paragraph active" id="p0">Te escribo esto con la cabeza fría, no para justificarme, sino porque reconozco que te debo una disculpa objetiva por cómo terminó todo.</p>
+            
+            <p class="paragraph" id="p1">Siendo realista, fui una mala pareja. <span class="highlight">No hay excusas.</span> Te traté con egoísmo, priorizando siempre mis intereses y descuidando los tuyos. Lamento los momentos en los que te grité por falta de control y las veces que te hice responsable de mis propios problemas.</p>
+            
+            <p class="paragraph" id="p2">Sabía que estaba actuando mal y decidí no cambiar en ese momento. Explotaba por detalles mínimos mientras tú intentabas mantener la relación. Esa falta de reciprocidad es algo de lo que ahora me avergüenzo, pero que asumo completamente.</p>
+            
+            <p class="paragraph" id="p3">El tiempo me ha hecho entender que comportarme así fue un error. He tenido que aprender a la fuerza para no repetir esos patrones y no ser esa persona nunca más.</p>
+            
+            <p class="paragraph" id="p4">No escribo esto esperando que vuelvas ni para pedirte nada. Simplemente quería cerrar este ciclo reconociendo mi responsabilidad en el daño que hubo. Si en algún momento nuestras vidas se cruzan de nuevo, será desde un lugar muy distinto.</p>
+            
+            <p class="paragraph" id="p5">Gracias por la paciencia que tuviste. Espero que te vaya bien.</p>
+        </div>
+
+        <button class="btn-next" id="nextBtn">Siguiente</button>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        const btn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progress');
+        const title = document.querySelector('h1');
+
+        btn.addEventListener('click', () => {
+            const currentP = document.getElementById(`p${currentStep}`);
+            
+            if (currentStep < totalSteps - 1) {
+                currentP.style.display = 'none'; 
+                currentP.classList.remove('active');
+                
+                currentStep++;
+                const nextP = document.getElementById(`p${currentStep}`);
+                nextP.classList.add('active');
+                
+                const progressPercent = ((currentStep) / (totalSteps - 1)) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+
+                if (currentStep === totalSteps - 1) {
+                    btn.textContent = "Cerrar";
+                    title.textContent = "Hasta luego";
+                }
+            } else {
+                window.close(); 
+                if(!window.closed) {
+                   document.body.innerHTML = "<div style='text-align:center; color:#8892b0;'>Fin del mensaje.</div>";
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
